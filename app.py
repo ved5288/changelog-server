@@ -10,10 +10,6 @@ app = Flask(__name__)
 # Your Slack bot's access token
 SLACK_BOT_TOKEN = os.environ.get("SLACK_BOT_TOKEN")
 
-@app.route('/')
-def hello():
-    return "Hello, Slack!"
-
 @app.route('/slack/events', methods=['POST'])
 def slack_events():
     data = request.json
