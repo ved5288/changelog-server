@@ -40,6 +40,7 @@ def github_webhook():
         print(f"New commit made to repository: {payload['repository']['name']}")
         print(f"Commit message: {payload['head_commit']['message']}")
         print(f"Commit author: {payload['head_commit']['author']['name']}")
+        print("This is a random message")
 
     return jsonify({'status': 'success'}), 200
 
