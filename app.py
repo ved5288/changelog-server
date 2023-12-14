@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 # Your Slack bot's access token
 # SLACK_BOT_TOKEN = os.environ.get("SLACK_BOT_TOKEN")
-SLACK_BOT_TOKEN = 'xoxb-6313210902918-6323640222375-3eRwqSboN3FxlA8wqqrbHoXQ'
+SLACK_BOT_TOKEN = 'xoxb-6313210902918-6323640222375-uyEUVS5SDnbSPRx0fv09kLey'
 
 @app.route('/')
 def hello():
@@ -37,20 +37,25 @@ def github_webhook():
     # Check if it's a push event
     if payload.get('commits'):
         # Log relevant details
-        print(f"New commit made to repository: {payload['repository']['name']}")
-        print(f"Commit message: {payload['head_commit']['message']}")
-        print(f"Commit author: {payload['head_commit']['author']['name']}")
-        print("This is a random message")
 
+        message = f"New commit made to repository: {payload['repository']['name']}" +\
+            f"Commit message: {payload['head_commit']['message']}" +\
+            f"Commit author: {payload['head_commit']['author']['name']}"
+        
+        send_slack_message("#general", message= message)
     return jsonify({'status': 'success'}), 200
 
 def send_welcome_message(user_id):
+    print("Sending welcome message to user_id: ", user_id)
+    return send_slack_message(user_id, "Welcome to my bot!")
+
+def send_slack_message(user_id, message):
     print("Sending welcome message to user_id: ", user_id)
     url = 'https://slack.com/api/chat.postMessage'
     headers = {'Authorization': f'Bearer {SLACK_BOT_TOKEN}'}
     payload = {
         'channel': user_id,
-        'text': 'Welcome to my bot!'
+        'text': message
     }
     response = requests.post(url, headers=headers, json=payload)
     print(response.json())
