@@ -1,12 +1,14 @@
 from flask import Flask, request, jsonify
 import os
 import requests
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 
 # Your Slack bot's access token
-# SLACK_BOT_TOKEN = os.environ.get("SLACK_BOT_TOKEN")
-SLACK_BOT_TOKEN = 'xoxb-6313210902918-6323640222375-uyEUVS5SDnbSPRx0fv09kLey'
+SLACK_BOT_TOKEN = os.environ.get("SLACK_BOT_TOKEN")
 
 @app.route('/')
 def hello():
