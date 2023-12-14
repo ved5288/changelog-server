@@ -36,9 +36,9 @@ def github_webhook():
     if payload.get('commits'):
         # Log relevant details
 
-        message = f"New commit made to repository: {payload['repository']['name']}" +\
-            f"Commit message: {payload['head_commit']['message']}" +\
-            f"Commit author: {payload['head_commit']['author']['name']}"
+        message = f"New commit made to repository: {payload['repository']['name']}\n" +\
+            f"Commit message: {payload['head_commit']['message']}\n" +\
+            f"Commit author: {payload['head_commit']['author']['name']}\n"
         
         send_slack_message("#general", message= message)
     return jsonify({'status': 'success'}), 200
