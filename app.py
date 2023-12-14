@@ -33,15 +33,32 @@ def github_webhook():
 
     print(payload)
     # Check if it's a push event
-    if payload.get('commits'):
+    # Check if it's a repository added event
+    if 'repositories_added' in payload and payload['repositories_added']:
+        for repo in payload['repositories_added']:
+            repo_name = repo['name']
+            channel_name = f'changelog-{repo_name}'
+            create_slack_channel(channel_name)
+    elif payload.get('commits'):
         # Log relevant details
 
         message = f"New commit made to repository: {payload['repository']['name']}\n" +\
             f"Commit message: {payload['head_commit']['message']}\n" +\
             f"Commit author: {payload['head_commit']['author']['name']}\n"
         
-        send_slack_message("#general", message= message)
+        slack_channel_name = f"#changelog-{payload['repository']['name']}"
+        send_slack_message(slack_channel_name, message= message)
     return jsonify({'status': 'success'}), 200
+
+def create_slack_channel(channel_name):
+    url = 'https://slack.com/api/conversations.create'
+    headers = {
+        'Authorization': f'Bearer {SLACK_BOT_TOKEN}',
+        'Content-Type': 'application/json'
+    }
+    data = {'name': channel_name}
+    response = requests.post(url, headers=headers, json=data)
+    print(response.json()) 
 
 def send_welcome_message(user_id):
     print("Sending welcome message to user_id: ", user_id)
